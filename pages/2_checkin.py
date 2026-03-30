@@ -1,51 +1,60 @@
-"""Mid-session / between-sessions quick check-in."""
 from datetime import date
 
 import streamlit as st
 
 from utils.db import init_db, get_sessions, save_session
+from utils.style import apply_style, status_badge
 
 init_db()
 
-st.set_page_config(page_title="Check-In", page_icon="✅")
-st.title("✅ Quick Check-In")
+st.set_page_config(page_title="Check-in", page_icon=None)
+apply_style()
+
+st.title("Check-in")
 
 today = date.today().isoformat()
 sessions_today = get_sessions(today, today)
 
-# ── today's summary banner ────────────────────────────────────────────────────
+# ── today's summary ───────────────────────────────────────────────────────────
 col1, col2, col3 = st.columns(3)
-col1.metric("Sessions today", len(sessions_today))
+col1.metric("Sessions", len(sessions_today))
 finished_yes = sum(1 for s in sessions_today if s["finished"] == "yes")
 col2.metric("Completed", finished_yes)
 total_min = sum(s["duration_min"] or 0 for s in sessions_today)
-col3.metric("Minutes focused", total_min)
+col3.metric("Focus min", total_min)
 
 st.divider()
 
-# ── mood / energy pulse ───────────────────────────────────────────────────────
-st.subheader("How are you feeling right now?")
+# ── energy pulse ──────────────────────────────────────────────────────────────
+st.subheader("Energy right now")
 energy_now = st.select_slider(
-    "Energy level",
+    "Level",
     options=[1, 2, 3, 4, 5],
     value=3,
-    format_func=lambda x: {1: "😴 Drained", 2: "😕 Low", 3: "😐 OK", 4: "🙂 Good", 5: "🚀 Energised"}[x],
+    format_func=lambda x: {
+        1: "1 — Drained",
+        2: "2 — Low",
+        3: "3 — OK",
+        4: "4 — Good",
+        5: "5 — Energised",
+    }[x],
+    label_visibility="collapsed",
 )
 if energy_now <= 2:
-    st.info("Low energy detected — consider a 5-min break or a water/snack.")
+    st.info("Low energy — consider a short break.")
 
 st.divider()
 
-# ── log a quick note or mini-session ─────────────────────────────────────────
-st.subheader("Log a quick session")
+# ── quick log ─────────────────────────────────────────────────────────────────
+st.subheader("Log a session")
 
 with st.form("quick_log"):
-    task_d = st.text_input("Task you just did", placeholder="e.g. Reviewed PR #42")
-    task_a = st.text_input("What actually happened?", placeholder="Same as above, or drift...")
+    task_d = st.text_input("Task", placeholder="e.g. Reviewed PR #42")
+    task_a = st.text_input("What actually happened?", placeholder="Same, or describe drift")
     col_a, col_b = st.columns(2)
     dur = col_a.number_input("Duration (min)", min_value=1, max_value=240, value=25)
     done = col_b.selectbox("Finished?", ["yes", "partial", "no"])
-    distractor = st.text_input("Distractor (optional)")
+    distractor = st.text_input("Distractor", placeholder="Optional")
     save = st.form_submit_button("Save")
 
 if save:
@@ -57,7 +66,7 @@ if save:
             finished=done,
             distractor=distractor.strip() or None,
         )
-        st.success("Session logged!")
+        st.success("Saved.")
         st.rerun()
     else:
         st.warning("Task name is required.")
@@ -66,13 +75,14 @@ st.divider()
 
 # ── today's session list ──────────────────────────────────────────────────────
 if sessions_today:
-    st.subheader("Today's sessions")
+    st.subheader("Today")
     for s in reversed(sessions_today):
-        icon = {"yes": "✅", "partial": "🔶", "no": "❌"}.get(s["finished"], "")
-        with st.expander(f"{icon} {s['task_declared']} — {s['duration_min']} min"):
+        badge = status_badge(s["finished"])
+        with st.expander(f"{s['task_declared']}  ·  {s['duration_min']} min"):
+            st.markdown(badge, unsafe_allow_html=True)
             if s["task_actual"] and s["task_actual"] != s["task_declared"]:
-                st.write(f"**Actual:** {s['task_actual']}")
+                st.markdown(f"**Actual:** {s['task_actual']}")
             if s["distractor"]:
-                st.write(f"**Distractor:** {s['distractor']}")
+                st.markdown(f"**Distractor:** {s['distractor']}")
 else:
-    st.info("No sessions logged yet today. Start your first one in the Timer page!")
+    st.caption("No sessions logged yet. Use the Timer page to start one.")

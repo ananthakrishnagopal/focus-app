@@ -1,4 +1,3 @@
-"""Analytics dashboard."""
 from datetime import date, timedelta
 
 import streamlit as st
@@ -14,21 +13,24 @@ from utils.analytics import (
     streak_days,
     finished_counts,
 )
+from utils.style import apply_style
 
 init_db()
 
-st.set_page_config(page_title="Dashboard", page_icon="📊", layout="wide")
-st.title("📊 Focus Dashboard")
+st.set_page_config(page_title="Dashboard", page_icon=None, layout="wide")
+apply_style()
 
-# ── date range picker ─────────────────────────────────────────────────────────
+st.title("Dashboard")
+
+# ── date range ────────────────────────────────────────────────────────────────
 today = date.today()
-range_options = {
-    "Last 7 days": 7,
-    "Last 14 days": 14,
-    "Last 30 days": 30,
-    "Last 90 days": 90,
-}
-selected_range = st.selectbox("Date range", list(range_options.keys()), index=0)
+range_options = {"7 days": 7, "14 days": 14, "30 days": 30, "90 days": 90}
+selected_range = st.selectbox(
+    "Range",
+    list(range_options.keys()),
+    index=0,
+    label_visibility="collapsed",
+)
 days_back = range_options[selected_range]
 start = (today - timedelta(days=days_back - 1)).isoformat()
 end = today.isoformat()
@@ -37,55 +39,54 @@ sessions = get_sessions(start, end)
 eod_logs = get_eod_logs(start, end)
 
 if not sessions:
-    st.info(f"No sessions recorded in the last {days_back} days. Start your first focus session!")
+    st.caption(f"No sessions in the last {days_back} days.")
     st.stop()
 
-# ── top-level metrics ─────────────────────────────────────────────────────────
-st.subheader("Overview")
-c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Total sessions", len(sessions))
-c2.metric("Completion rate", f"{completion_rate(sessions):.0%}")
-c3.metric("Alignment rate", f"{task_alignment_rate(sessions):.0%}")
-c4.metric("Focus minutes", total_focused_minutes(sessions))
-c5.metric("Current streak", f"{streak_days(sessions)} days")
+# ── overview metrics ──────────────────────────────────────────────────────────
+cols = st.columns(5)
+cols[0].metric("Sessions", len(sessions))
+cols[1].metric("Completion", f"{completion_rate(sessions):.0%}")
+cols[2].metric("Alignment", f"{task_alignment_rate(sessions):.0%}")
+cols[3].metric("Focus min", total_focused_minutes(sessions))
+cols[4].metric("Streak", f"{streak_days(sessions)}d")
 
 if eod_logs:
-    c_e = st.columns(1)[0]
-    c_e.metric("Avg energy (EOD)", f"{avg_energy(eod_logs):.1f} / 5")
+    st.caption(f"Avg energy  {avg_energy(eod_logs):.1f} / 5")
 
 st.divider()
 
-# ── sessions per day bar chart ────────────────────────────────────────────────
+# ── sessions per day ──────────────────────────────────────────────────────────
 st.subheader("Sessions per day")
 try:
     import pandas as pd
 
     day_counts = sessions_by_day(sessions)
-    # fill missing days with 0
     all_days = [(today - timedelta(days=i)).isoformat() for i in range(days_back - 1, -1, -1)]
-    df_days = pd.DataFrame({"date": all_days, "sessions": [day_counts.get(d, 0) for d in all_days]})
-    df_days = df_days.set_index("date")
-    st.bar_chart(df_days)
+    df_days = pd.DataFrame(
+        {"date": all_days, "sessions": [day_counts.get(d, 0) for d in all_days]}
+    ).set_index("date")
+    st.bar_chart(df_days, height=200)
 except ImportError:
-    st.warning("Install pandas for charts: `pip install pandas`")
+    st.warning("Install pandas for charts.")
 
 st.divider()
 
-# ── finished breakdown ────────────────────────────────────────────────────────
-st.subheader("Session outcomes")
+# ── outcomes ──────────────────────────────────────────────────────────────────
+st.subheader("Outcomes")
 counts = finished_counts(sessions)
-col_a, col_b, col_c = st.columns(3)
-col_a.metric("✅ Finished", counts["yes"])
-col_b.metric("🔶 Partial", counts["partial"])
-col_c.metric("❌ Not finished", counts["no"])
+c1, c2, c3 = st.columns(3)
+c1.metric("Done", counts["yes"])
+c2.metric("Partial", counts["partial"])
+c3.metric("Missed", counts["no"])
 
 try:
     import pandas as pd
 
     df_fin = pd.DataFrame(
-        {"outcome": ["Finished", "Partial", "Not finished"], "count": [counts["yes"], counts["partial"], counts["no"]]}
+        {"outcome": ["Done", "Partial", "Missed"],
+         "count":   [counts["yes"], counts["partial"], counts["no"]]}
     ).set_index("outcome")
-    st.bar_chart(df_fin)
+    st.bar_chart(df_fin, height=180)
 except ImportError:
     pass
 
@@ -98,35 +99,33 @@ if distractors:
     try:
         import pandas as pd
 
-        df_dist = pd.DataFrame(distractors, columns=["Distractor", "Count"]).set_index("Distractor")
-        st.bar_chart(df_dist)
+        df_dist = pd.DataFrame(distractors, columns=["distractor", "count"]).set_index("distractor")
+        st.bar_chart(df_dist, height=200)
     except ImportError:
         for name, cnt in distractors:
-            st.markdown(f"- **{name}**: {cnt}x")
-
-st.divider()
+            st.markdown(f"- **{name}** — {cnt}×")
 
 # ── energy trend ──────────────────────────────────────────────────────────────
 if eod_logs:
-    st.subheader("Energy trend (EOD)")
+    st.divider()
+    st.subheader("Energy trend")
     try:
         import pandas as pd
 
-        df_energy = pd.DataFrame(eod_logs)[["date", "energy"]].set_index("date")
-        st.line_chart(df_energy)
+        df_e = pd.DataFrame(eod_logs)[["date", "energy"]].set_index("date")
+        st.line_chart(df_e, height=180)
     except ImportError:
         for log in eod_logs:
             st.markdown(f"- {log['date']}: {log['energy']}/5")
 
 st.divider()
 
-# ── raw session log ───────────────────────────────────────────────────────────
+# ── raw log ───────────────────────────────────────────────────────────────────
 with st.expander("Raw session log"):
     try:
         import pandas as pd
 
-        df_raw = pd.DataFrame(sessions)
-        st.dataframe(df_raw, use_container_width=True)
+        st.dataframe(pd.DataFrame(sessions), use_container_width=True)
     except ImportError:
         for s in sessions:
             st.write(s)

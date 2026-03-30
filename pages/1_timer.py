@@ -4,17 +4,20 @@ from datetime import datetime
 import streamlit as st
 
 from utils.db import init_db, save_session
+from utils.style import apply_style
 
 init_db()
 
-st.set_page_config(page_title="Focus Timer", page_icon="⏱️")
-st.title("⏱️ Focus Timer")
+st.set_page_config(page_title="Timer", page_icon=None)
+apply_style()
+
+st.title("Timer")
 
 # ── session state defaults ────────────────────────────────────────────────────
 for key, default in [
     ("timer_running", False),
     ("start_time", None),
-    ("elapsed_on_pause", 0),   # accumulated seconds before latest Start
+    ("elapsed_on_pause", 0),
     ("last_task", ""),
 ]:
     if key not in st.session_state:
@@ -37,16 +40,18 @@ def fmt_time(seconds: int) -> str:
     return f"{m:02d}:{s:02d}"
 
 
-# ── UI ────────────────────────────────────────────────────────────────────────
+# ── task input ────────────────────────────────────────────────────────────────
 task = st.text_input(
     "What are you working on?",
     value=st.session_state.last_task,
     placeholder="e.g. Write project report intro",
+    label_visibility="visible",
 )
 
+# ── controls ──────────────────────────────────────────────────────────────────
 col1, col2, col3 = st.columns(3)
 
-if col1.button("▶ Start", disabled=st.session_state.timer_running, use_container_width=True):
+if col1.button("Start", disabled=st.session_state.timer_running, use_container_width=True):
     if task.strip():
         st.session_state.timer_running = True
         st.session_state.start_time = datetime.now()
@@ -55,13 +60,13 @@ if col1.button("▶ Start", disabled=st.session_state.timer_running, use_contain
     else:
         st.warning("Enter a task before starting.")
 
-if col2.button("⏸ Pause", disabled=not st.session_state.timer_running, use_container_width=True):
+if col2.button("Pause", disabled=not st.session_state.timer_running, use_container_width=True):
     st.session_state.elapsed_on_pause = elapsed_seconds()
     st.session_state.start_time = None
     st.session_state.timer_running = False
     st.rerun()
 
-if col3.button("⏹ Stop & Log", use_container_width=True):
+if col3.button("Stop + log", use_container_width=True):
     total = elapsed_seconds()
     st.session_state.timer_running = False
     st.session_state["_pending_log"] = {
@@ -73,29 +78,38 @@ if col3.button("⏹ Stop & Log", use_container_width=True):
             else None
         ),
     }
-    # reset timer state
     st.session_state.start_time = None
     st.session_state.elapsed_on_pause = 0
     st.rerun()
 
-# ── live display ──────────────────────────────────────────────────────────────
+# ── clock display ─────────────────────────────────────────────────────────────
 secs = elapsed_seconds()
+clock_color = "#111" if not st.session_state.timer_running else "#111"
 st.markdown(
-    f"<h1 style='text-align:center;font-size:4rem;letter-spacing:4px'>{fmt_time(secs)}</h1>",
+    f"""
+    <div style='text-align:center;padding:2.5rem 0 1.5rem'>
+        <span style='font-size:4.5rem;font-weight:300;letter-spacing:-0.02em;
+                     font-family:"SF Mono","Fira Mono","Courier New",monospace;
+                     color:{clock_color}'>{fmt_time(secs)}</span>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
 if st.session_state.timer_running:
-    status = st.empty()
-    status.info(f"Focusing on: **{st.session_state.last_task}**")
+    st.markdown(
+        f"<p style='text-align:center;color:#888;font-size:0.85rem'>"
+        f"{st.session_state.last_task}</p>",
+        unsafe_allow_html=True,
+    )
     time.sleep(1)
     st.rerun()
 
 # ── post-session log form ─────────────────────────────────────────────────────
-if "_pending_log" in st.session_state and st.session_state["_pending_log"]:
+if st.session_state.get("_pending_log"):
     pending = st.session_state["_pending_log"]
     st.divider()
-    st.subheader("Log this session")
+    st.subheader("Log session")
 
     with st.form("log_session"):
         task_actual = st.text_input(
@@ -104,9 +118,9 @@ if "_pending_log" in st.session_state and st.session_state["_pending_log"]:
         )
         finished = st.selectbox("Did you finish?", ["yes", "partial", "no"])
         distractor = st.text_input(
-            "Main distractor (leave blank if none)", placeholder="e.g. Slack notifications"
+            "Main distractor", placeholder="Leave blank if none"
         )
-        submitted = st.form_submit_button("Save session")
+        submitted = st.form_submit_button("Save")
 
     if submitted:
         save_session(
@@ -118,5 +132,4 @@ if "_pending_log" in st.session_state and st.session_state["_pending_log"]:
             start_time=pending.get("start_time"),
         )
         st.session_state["_pending_log"] = None
-        st.success(f"Session saved — {pending['duration_min']} min logged.")
-        st.balloons()
+        st.success(f"Saved — {pending['duration_min']} min logged.")

@@ -100,6 +100,11 @@ def get_eod_logs(start: str, end: str) -> list[dict]:
     return [dict(r) for r in rows]
 
 
+def delete_session(session_id: int) -> None:
+    with _conn() as conn:
+        conn.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+
+
 def count_sessions_today() -> int:
     today = date.today().isoformat()
     with _conn() as conn:

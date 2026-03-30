@@ -2,7 +2,7 @@ from datetime import date
 
 import streamlit as st
 
-from utils.db import init_db, get_sessions, save_session
+from utils.db import init_db, get_sessions, save_session, delete_session
 from utils.style import apply_style, status_badge
 
 init_db()
@@ -84,5 +84,8 @@ if sessions_today:
                 st.markdown(f"**Actual:** {s['task_actual']}")
             if s["distractor"]:
                 st.markdown(f"**Distractor:** {s['distractor']}")
+            if st.button("Delete", key=f"del_{s['id']}"):
+                delete_session(s["id"])
+                st.rerun()
 else:
     st.caption("No sessions logged yet. Use the Timer page to start one.")

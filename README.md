@@ -37,11 +37,32 @@ streamlit run app.py
 
 Then open the local URL shown by Streamlit (usually `http://localhost:8501`).
 
+## Screenshots
+
+### Home
+![Home](assets/screenshots/home.png)
+
+### Timer
+![Timer](assets/screenshots/timer.png)
+
+### Check-in
+![Check-in](assets/screenshots/checkin.png)
+
+### End of day
+![End of day](assets/screenshots/eod.png)
+
+### Dashboard
+![Dashboard Part 1](assets/screenshots/dashboard-1.png)
+![Dashboard Part 2](assets/screenshots/dashboard-2.png)
+![Dashboard Part 3](assets/screenshots/dashboard-3.png)
+
 ## Project Structure
 
 ```text
 focus-app/
 ├── app.py                  # Home page (context-aware nudge)
+├── assets/
+│   └── screenshots/        # README images
 ├── pages/
 │   ├── 1_timer.py          # Focus timer + post-session log
 │   ├── 2_checkin.py        # Mid-day check-in + manual log
@@ -86,4 +107,3 @@ The app creates `focus.db` automatically with two tables:
 - Reminder notifications
 - Weekly summary view
 - Optional cloud sync
-

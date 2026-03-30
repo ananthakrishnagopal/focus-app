@@ -193,6 +193,7 @@ def render_topnav() -> None:
         .topnav a:hover { color:#111; }
         </style>
         <nav class="topnav">
+            <a href="/" target="_self">Home</a>
             <a href="/timer" target="_self">Timer</a>
             <a href="/checkin" target="_self">Check-in</a>
             <a href="/eod" target="_self">End of day</a>

@@ -185,7 +185,7 @@ def render_topnav() -> None:
     st.markdown(
         """
         <style>
-        .topnav { position:fixed;top:3.2rem;right:1.6rem;z-index:1000;
+        .topnav { position:fixed;top:0.75rem;right:1.6rem;z-index:1000;
                   display:flex;gap:1.4rem;align-items:center; }
         .topnav a { font-size:0.7rem;font-weight:500;letter-spacing:0.07em;
                     text-transform:uppercase;color:#bbb;text-decoration:none;

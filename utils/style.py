@@ -139,25 +139,42 @@ details[data-testid="stExpander"] {
     letter-spacing: 0.01em !important;
 }
 
-/* ── nav link cards (home page) ──────────────────────────── */
+/* ── page links ──────────────────────────────────────────── */
 [data-testid="stPageLink-NavLink"] {
     display: block !important;
-    border: 1px solid #DDD !important;
-    border-radius: 6px !important;
-    padding: 0.9rem 1rem !important;
-    background: transparent !important;
+    border: 1px solid #111 !important;
+    border-radius: 4px !important;
+    padding: 0.55rem 1.2rem !important;
+    background: #111 !important;
     text-decoration: none !important;
-    transition: border-color 0.12s, background 0.12s !important;
+    transition: background 0.12s !important;
 }
 [data-testid="stPageLink-NavLink"]:hover {
+    background: #333 !important;
+    border-color: #333 !important;
+}
+[data-testid="stPageLink-NavLink"] p {
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    color: #F7F6F2 !important;
+    margin: 0 !important;
+}
+
+/* secondary links (in columns) */
+.stColumns [data-testid="stPageLink-NavLink"] {
+    background: transparent !important;
+    border-color: #DDD !important;
+    padding: 0.4rem 0.7rem !important;
+}
+.stColumns [data-testid="stPageLink-NavLink"]:hover {
     border-color: #111 !important;
     background: #EEECEA !important;
 }
-[data-testid="stPageLink-NavLink"] p {
-    font-size: 0.85rem !important;
-    font-weight: 500 !important;
-    color: #111 !important;
-    margin: 0 !important;
+.stColumns [data-testid="stPageLink-NavLink"] p {
+    color: #555 !important;
+    font-size: 0.75rem !important;
 }
 
 /* ── hide Streamlit branding (not header — sidebar lives there) ── */

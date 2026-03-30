@@ -167,6 +167,7 @@ details[data-testid="stExpander"] {
 header.stAppHeader, [data-testid="stHeader"] {
     background: transparent !important;
     background-color: transparent !important;
+    pointer-events: none !important;
 }
 
 /* ── hide Streamlit branding ─────────────────────────────── */

@@ -188,6 +188,29 @@ def apply_style() -> None:
     st.markdown(_CSS, unsafe_allow_html=True)
 
 
+def render_topnav() -> None:
+    """Inject a fixed ghost nav in the top-right corner."""
+    st.markdown(
+        """
+        <style>
+        .topnav { position:fixed;top:3.2rem;right:1.6rem;z-index:1000;
+                  display:flex;gap:1.4rem;align-items:center; }
+        .topnav a { font-size:0.7rem;font-weight:500;letter-spacing:0.07em;
+                    text-transform:uppercase;color:#bbb;text-decoration:none;
+                    transition:color 0.15s; }
+        .topnav a:hover { color:#111; }
+        </style>
+        <nav class="topnav">
+            <a href="/timer">Timer</a>
+            <a href="/checkin">Check-in</a>
+            <a href="/eod">End of day</a>
+            <a href="/dashboard">Dashboard</a>
+        </nav>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def status_badge(finished: str) -> str:
     """Return an HTML inline badge for session finished status."""
     cfg = {

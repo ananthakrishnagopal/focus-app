@@ -3,12 +3,13 @@ from datetime import date, datetime
 import streamlit as st
 
 from utils.db import init_db, get_sessions, get_eod_logs
-from utils.style import apply_style
+from utils.style import apply_style, render_topnav
 
 init_db()
 
 st.set_page_config(page_title="Focus", page_icon=None, layout="centered")
 apply_style()
+render_topnav()
 
 # ── state ─────────────────────────────────────────────────────────────────────
 today = date.today().isoformat()
@@ -65,20 +66,3 @@ st.markdown(
 )
 
 st.page_link(cta_page, label=cta_label)
-
-# ── secondary links ───────────────────────────────────────────────────────────
-st.markdown(
-    "<p style='font-size:0.75rem;color:#bbb;margin:2rem 0 0.5rem;"
-    "letter-spacing:0.06em;text-transform:uppercase'>Other pages</p>",
-    unsafe_allow_html=True,
-)
-
-other_pages = [
-    ("pages/1_timer.py",      "Timer"),
-    ("pages/2_checkin.py",    "Check-in"),
-    ("pages/3_eod.py",        "End of day"),
-    ("pages/4_dashboard.py",  "Dashboard"),
-]
-cols = st.columns(len(other_pages))
-for col, (path, label) in zip(cols, other_pages):
-    col.page_link(path, label=label)

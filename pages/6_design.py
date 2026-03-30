@@ -1,9 +1,10 @@
 import streamlit as st
-from utils.style import apply_style, render_topnav
+from utils.style import apply_style, render_topnav, render_footer
 
-st.set_page_config(page_title="Design & Architecture", page_icon=None)
+st.set_page_config(page_title="Focus — Design", page_icon=None)
 apply_style()
 render_topnav()
+render_footer()
 
 st.title("Design & Architecture")
 st.caption("How the app is built and why decisions were made.")

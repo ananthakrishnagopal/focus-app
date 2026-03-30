@@ -4,13 +4,14 @@ from datetime import datetime
 import streamlit as st
 
 from utils.db import init_db, save_session
-from utils.style import apply_style, render_topnav
+from utils.style import apply_style, render_topnav, render_footer
 
 init_db()
 
-st.set_page_config(page_title="Timer", page_icon=None)
+st.set_page_config(page_title="Focus — Timer", page_icon=None)
 apply_style()
 render_topnav()
+render_footer()
 
 st.title("Timer")
 

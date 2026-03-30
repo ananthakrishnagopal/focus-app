@@ -199,9 +199,40 @@ def render_topnav() -> None:
             <a href="/checkin" target="_self">Check-in</a>
             <a href="/eod" target="_self">EOD</a>
             <a href="/dashboard" target="_self">Dashboard</a>
+        </nav>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_footer() -> None:
+    """Inject a minimal footer with Docs and Design links."""
+    st.markdown(
+        """
+        <style>
+        .appfooter {
+            position: fixed;
+            bottom: 1.2rem;
+            right: 1.6rem;
+            z-index: 1000;
+            display: flex;
+            gap: 1.2rem;
+        }
+        .appfooter a {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .appfooter a:hover { color: #111; }
+        </style>
+        <div class="appfooter">
             <a href="/docs" target="_self">Docs</a>
             <a href="/design" target="_self">Design</a>
-        </nav>
+        </div>
         """,
         unsafe_allow_html=True,
     )

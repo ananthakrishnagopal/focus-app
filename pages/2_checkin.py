@@ -3,13 +3,14 @@ from datetime import date
 import streamlit as st
 
 from utils.db import init_db, get_sessions, save_session, delete_session
-from utils.style import apply_style, render_topnav, status_badge
+from utils.style import apply_style, render_topnav, render_footer, status_badge
 
 init_db()
 
-st.set_page_config(page_title="Check-in", page_icon=None)
+st.set_page_config(page_title="Focus — Check-in", page_icon=None)
 apply_style()
 render_topnav()
+render_footer()
 
 st.title("Check-in")
 

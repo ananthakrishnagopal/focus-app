@@ -13,13 +13,14 @@ from utils.analytics import (
     streak_days,
     finished_counts,
 )
-from utils.style import apply_style, render_topnav
+from utils.style import apply_style, render_topnav, render_footer
 
 init_db()
 
-st.set_page_config(page_title="Dashboard", page_icon=None, layout="wide")
+st.set_page_config(page_title="Focus — Dashboard", page_icon=None, layout="wide")
 apply_style()
 render_topnav()
+render_footer()
 
 st.title("Dashboard")
 

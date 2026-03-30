@@ -3,13 +3,14 @@ from datetime import date, datetime
 import streamlit as st
 
 from utils.db import init_db, get_sessions, get_eod_logs
-from utils.style import apply_style, render_topnav
+from utils.style import apply_style, render_topnav, render_footer
 
 init_db()
 
 st.set_page_config(page_title="Focus", page_icon=None, layout="centered")
 apply_style()
 render_topnav()
+render_footer()
 
 # ── state ─────────────────────────────────────────────────────────────────────
 today = date.today().isoformat()

@@ -3,13 +3,14 @@ from datetime import date
 import streamlit as st
 
 from utils.db import init_db, get_sessions, save_eod, get_eod_logs
-from utils.style import apply_style, render_topnav, status_badge
+from utils.style import apply_style, render_topnav, render_footer, status_badge
 
 init_db()
 
-st.set_page_config(page_title="End of day", page_icon=None)
+st.set_page_config(page_title="Focus — End of day", page_icon=None)
 apply_style()
 render_topnav()
+render_footer()
 
 st.title("End of day")
 

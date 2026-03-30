@@ -25,7 +25,7 @@ A local-first Streamlit app for ADHD-friendly focus tracking:
 ## Quick Start
 
 ```bash
-git clone https://github.com/<your-username>/focus-app.git
+git clone https://github.com/ananthakrishnagopal/focus-app.git
 cd focus-app
 
 python -m venv .venv

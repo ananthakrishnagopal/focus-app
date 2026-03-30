@@ -162,22 +162,14 @@ details[data-testid="stExpander"] {
     margin: 0 !important;
 }
 
-/* secondary links (in columns) */
-.stColumns [data-testid="stPageLink-NavLink"] {
+
+/* ── transparent header so ghost nav shows through ───────── */
+header.stAppHeader, [data-testid="stHeader"] {
     background: transparent !important;
-    border-color: #DDD !important;
-    padding: 0.4rem 0.7rem !important;
-}
-.stColumns [data-testid="stPageLink-NavLink"]:hover {
-    border-color: #111 !important;
-    background: #EEECEA !important;
-}
-.stColumns [data-testid="stPageLink-NavLink"] p {
-    color: #555 !important;
-    font-size: 0.75rem !important;
+    background-color: transparent !important;
 }
 
-/* ── hide Streamlit branding (not header — sidebar lives there) ── */
+/* ── hide Streamlit branding ─────────────────────────────── */
 #MainMenu, footer { visibility: hidden; }
 [data-testid="stToolbar"] { visibility: hidden; }
 </style>
@@ -201,10 +193,10 @@ def render_topnav() -> None:
         .topnav a:hover { color:#111; }
         </style>
         <nav class="topnav">
-            <a href="/timer">Timer</a>
-            <a href="/checkin">Check-in</a>
-            <a href="/eod">End of day</a>
-            <a href="/dashboard">Dashboard</a>
+            <a href="/timer" target="_self">Timer</a>
+            <a href="/checkin" target="_self">Check-in</a>
+            <a href="/eod" target="_self">End of day</a>
+            <a href="/dashboard" target="_self">Dashboard</a>
         </nav>
         """,
         unsafe_allow_html=True,

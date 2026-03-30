@@ -107,16 +107,16 @@ if st.session_state.timer_running:
 if st.session_state.get("_pending_log"):
     pending = st.session_state["_pending_log"]
     st.divider()
-    st.subheader("Log session")
+    st.subheader("Log a session")
 
     with st.form("log_session"):
         task_actual = st.text_input(
-            "What did you actually work on?",
+            "What actually happened?",
             value=pending["task_declared"],
         )
         finished = st.selectbox("Finished?", ["yes", "partial", "no"])
         distractor = st.text_input(
-            "Main distractor", placeholder="Leave blank if none"
+            "Distractor", placeholder="Optional"
         )
         submitted = st.form_submit_button("Save")
 

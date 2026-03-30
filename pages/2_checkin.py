@@ -32,11 +32,11 @@ energy_now = st.select_slider(
     options=[1, 2, 3, 4, 5],
     value=3,
     format_func=lambda x: {
-        1: "1 — Drained",
+        1: "1 — Exhausted",
         2: "2 — Low",
         3: "3 — OK",
         4: "4 — Good",
-        5: "5 — Energised",
+        5: "5 — Great",
     }[x],
     label_visibility="collapsed",
 )

@@ -26,7 +26,7 @@ min_today = sum(s["duration_min"] or 0 for s in sessions_today)
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Sessions", len(sessions_today))
-col2.metric("Completed", done_today)
+col2.metric("Done", done_today)
 col3.metric("Focus min", min_today)
 
 st.divider()

@@ -19,7 +19,7 @@ sessions_today = get_sessions(today, today)
 col1, col2, col3 = st.columns(3)
 col1.metric("Sessions", len(sessions_today))
 finished_yes = sum(1 for s in sessions_today if s["finished"] == "yes")
-col2.metric("Completed", finished_yes)
+col2.metric("Done", finished_yes)
 total_min = sum(s["duration_min"] or 0 for s in sessions_today)
 col3.metric("Focus min", total_min)
 

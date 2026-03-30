@@ -45,7 +45,6 @@ task = st.text_input(
     "What are you working on?",
     value=st.session_state.last_task,
     placeholder="e.g. Write project report intro",
-    label_visibility="visible",
 )
 
 # ── controls ──────────────────────────────────────────────────────────────────
@@ -84,13 +83,12 @@ if col3.button("Stop + log", use_container_width=True):
 
 # ── clock display ─────────────────────────────────────────────────────────────
 secs = elapsed_seconds()
-clock_color = "#111" if not st.session_state.timer_running else "#111"
 st.markdown(
     f"""
     <div style='text-align:center;padding:2.5rem 0 1.5rem'>
         <span style='font-size:4.5rem;font-weight:300;letter-spacing:-0.02em;
                      font-family:"SF Mono","Fira Mono","Courier New",monospace;
-                     color:{clock_color}'>{fmt_time(secs)}</span>
+                     color:#111'>{fmt_time(secs)}</span>
     </div>
     """,
     unsafe_allow_html=True,
@@ -116,7 +114,7 @@ if st.session_state.get("_pending_log"):
             "What did you actually work on?",
             value=pending["task_declared"],
         )
-        finished = st.selectbox("Did you finish?", ["yes", "partial", "no"])
+        finished = st.selectbox("Finished?", ["yes", "partial", "no"])
         distractor = st.text_input(
             "Main distractor", placeholder="Leave blank if none"
         )

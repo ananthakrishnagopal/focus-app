@@ -20,7 +20,7 @@ existing_eod = get_eod_logs(today, today)
 col1, col2, col3 = st.columns(3)
 col1.metric("Sessions", len(sessions_today))
 done_count = sum(1 for s in sessions_today if s["finished"] == "yes")
-col2.metric("Completed", done_count)
+col2.metric("Done", done_count)
 total_min = sum(s["duration_min"] or 0 for s in sessions_today)
 col3.metric("Focus min", total_min)
 

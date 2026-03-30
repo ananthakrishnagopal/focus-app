@@ -133,14 +133,36 @@ details[data-testid="stExpander"] {
     font-size: 0.85rem !important;
 }
 
-/* ── sidebar ─────────────────────────────────────────────── */
+/* ── sidebar nav ─────────────────────────────────────────── */
 [data-testid="stSidebarNav"] a span {
     font-size: 0.85rem !important;
     letter-spacing: 0.01em !important;
 }
 
-/* ── hide Streamlit branding ─────────────────────────────── */
-#MainMenu, footer, header { visibility: hidden; }
+/* ── nav link cards (home page) ──────────────────────────── */
+[data-testid="stPageLink-NavLink"] {
+    display: block !important;
+    border: 1px solid #DDD !important;
+    border-radius: 6px !important;
+    padding: 0.9rem 1rem !important;
+    background: transparent !important;
+    text-decoration: none !important;
+    transition: border-color 0.12s, background 0.12s !important;
+}
+[data-testid="stPageLink-NavLink"]:hover {
+    border-color: #111 !important;
+    background: #EEECEA !important;
+}
+[data-testid="stPageLink-NavLink"] p {
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    color: #111 !important;
+    margin: 0 !important;
+}
+
+/* ── hide Streamlit branding (not header — sidebar lives there) ── */
+#MainMenu, footer { visibility: hidden; }
+[data-testid="stToolbar"] { visibility: hidden; }
 </style>
 """
 

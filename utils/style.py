@@ -197,8 +197,10 @@ def render_topnav() -> None:
             <a href="/" target="_self">Home</a>
             <a href="/timer" target="_self">Timer</a>
             <a href="/checkin" target="_self">Check-in</a>
-            <a href="/eod" target="_self">End of day</a>
+            <a href="/eod" target="_self">EOD</a>
             <a href="/dashboard" target="_self">Dashboard</a>
+            <a href="/docs" target="_self">Docs</a>
+            <a href="/design" target="_self">Design</a>
         </nav>
         """,
         unsafe_allow_html=True,
